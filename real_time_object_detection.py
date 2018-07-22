@@ -1,3 +1,4 @@
+
 # USAGE
 # python real_time_object_detection.py --prototxt MobileNetSSD_deploy.prototxt.txt --model MobileNetSSD_deploy.caffemodel
 
@@ -38,10 +39,6 @@ print("[INFO] starting video stream...")
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
 fps = FPS().start()
-
-
-
-
 # loop over the frames from the video stream
 while True:
 	# grab the frame from the threaded video stream and resize it
@@ -101,7 +98,11 @@ fps.stop()
 print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 
-
+#crop the frame 
+if CLASSES[idx]=="person":
+	cropped = frame[startY:startY + endY, startX:startX + endX]
+	FaceFileName = "face_" + str(y) + ".png"
+	cv2.imwrite(FaceFileName, cropped)
 
 
 # do a bit of cleanup
