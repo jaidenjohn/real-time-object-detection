@@ -10,6 +10,9 @@ import argparse
 import imutils
 import time
 import cv2
+import itertools
+s=0
+
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -56,6 +59,7 @@ while True:
 	net.setInput(blob)
 	detections = net.forward()
 
+
 	# loop over the detections
 	for i in np.arange(0, detections.shape[2]):
 		#aceFileName, sub_face)
@@ -81,28 +85,27 @@ while True:
 			y = startY - 15 if startY - 15 > 15 else startY + 15
 			cv2.putText(frame, label, (startX, y),
 				cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
-
 	# show the output frame
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
-
+#when person detect cropped images will save into a files
+	if CLASSES[idx]=="person":
+		cropped = frame[startY:startY + endY, startX:startX + endX]
+		for x in range(1):
+			s=s+1
+		FaceFileName = "face_" + str(s) + ".png"
+		cv2.imwrite(FaceFileName, cropped)
 	# if the `q` key was pressed, break from the loop
 	if key == ord("q"):
 		break
-
 	# update the FPS counter
 	fps.update()
-
 # stop the timer and display FPS information
 fps.stop()
 print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 
-#crop the frame 
-if CLASSES[idx]=="person":
-	cropped = frame[startY:startY + endY, startX:startX + endX]
-	FaceFileName = "face_" + str(y) + ".png"
-	cv2.imwrite(FaceFileName, cropped)
+
 
 
 # do a bit of cleanup
