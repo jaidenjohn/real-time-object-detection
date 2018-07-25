@@ -89,7 +89,7 @@ while True:
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
 #when person detect cropped images will save into a files
-	if CLASSES[idx]=="person":
+	if CLASSES[idx]=="person" and confidence > 0.90:
 		cropped = frame[startY:startY + endY, startX:startX + endX]
 		for x in range(1):
 			s=s+1
